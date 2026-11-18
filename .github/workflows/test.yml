@@ -1,0 +1,37 @@
+name: Checks
+
+on:
+  push:
+    branches: ['*.x']
+  pull_request:
+    branches: ['*.x']
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+      - run: npm ci
+      - run: npm run eslint
+      - run: npm run stylelint
+      - run: npm run prettier -- --check
+      - run: npm run build
+      - run: npm pack --dry-run
+      - run: npm run test:unit
+      - run: npx --no playwright install --with-deps --only-shell
+      - run: fc-cache -f -v
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-artifacts
+          path: .vitest-attachments/**/*.png
+          if-no-files-found: ignore

@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { h } from "vue";
 import { render } from "vitest-browser-vue";
 import Component from "./typography.js";
 
@@ -34,6 +35,51 @@ const transforms = [
 ];
 
 describe("Typography Component", () => {
+  it("renders b and strong in bold by default", () => {
+    const screen = render(() =>
+      h("p", { "data-testid": "paragraph" }, [
+        "Plain text with ",
+        h("b", { "data-testid": "bold" }, "bold text"),
+        " and ",
+        h("strong", { "data-testid": "strong" }, "strong text"),
+      ])
+    );
+
+    const paragraph = screen.getByTestId("paragraph").element();
+    const bold = screen.getByTestId("bold").element();
+    const strong = screen.getByTestId("strong").element();
+
+    expect(getComputedStyle(paragraph).fontWeight).toBe("400");
+    expect([
+      getComputedStyle(bold).fontWeight,
+      getComputedStyle(strong).fontWeight,
+    ]).toEqual(["700", "700"]);
+  });
+
+  it("renders i and em in italics and respects the italic style override", () => {
+    const screen = render(() =>
+      h("p", { "data-testid": "paragraph" }, [
+        "Plain text with ",
+        h("i", { "data-testid": "italic" }, "italic text"),
+        " and ",
+        h("em", { "data-testid": "emphasis" }, "emphasized text"),
+      ])
+    );
+
+    const paragraph = screen.getByTestId("paragraph").element();
+    const italic = screen.getByTestId("italic").element();
+    const emphasis = screen.getByTestId("emphasis").element();
+
+    expect(getComputedStyle(paragraph).fontStyle).toBe("normal");
+    expect(getComputedStyle(italic).fontStyle).toBe("italic");
+    expect(getComputedStyle(emphasis).fontStyle).toBe("italic");
+
+    paragraph.style.setProperty("--graupl-italic-font-style", "normal");
+
+    expect(getComputedStyle(italic).fontStyle).toBe("normal");
+    expect(getComputedStyle(emphasis).fontStyle).toBe("normal");
+  });
+
   it.each(sizes)("Should match size screenshot with %s:", async (size) => {
     const screen = render(Component, {
       props: {

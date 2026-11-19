@@ -35,49 +35,52 @@ const transforms = [
 ];
 
 describe("Typography Component", () => {
-  it("renders b and strong in bold by default", () => {
+  it("Should match the screenshot for b and strong:", async () => {
     const screen = render(() =>
-      h("p", { "data-testid": "paragraph" }, [
-        "Plain text with ",
-        h("b", { "data-testid": "bold" }, "bold text"),
-        " and ",
-        h("strong", { "data-testid": "strong" }, "strong text"),
-      ])
+      h(
+        "p",
+        {
+          "data-testid": "font",
+          style: {
+            width: "fit-content",
+            fontFamily: "Liberation Sans, sans-serif",
+          },
+        },
+        [
+          "Plain text with ",
+          h("b", "bold text"),
+          " and ",
+          h("strong", "strong text"),
+        ]
+      )
     );
 
-    const paragraph = screen.getByTestId("paragraph").element();
-    const bold = screen.getByTestId("bold").element();
-    const strong = screen.getByTestId("strong").element();
+    await document.fonts.ready;
 
-    expect(getComputedStyle(paragraph).fontWeight).toBe("400");
-    expect([
-      getComputedStyle(bold).fontWeight,
-      getComputedStyle(strong).fontWeight,
-    ]).toEqual(["700", "700"]);
+    await expect(screen.getByTestId("font")).toMatchScreenshot();
   });
 
-  it("renders i and em in italics and respects the italic style override", () => {
+  it("Should match the screenshots for i and em with the default and overridden styles:", async () => {
     const screen = render(() =>
-      h("p", { "data-testid": "paragraph" }, [
+      h("p", { "data-testid": "font", style: { width: "fit-content" } }, [
         "Plain text with ",
-        h("i", { "data-testid": "italic" }, "italic text"),
+        h("i", "italic text"),
         " and ",
-        h("em", { "data-testid": "emphasis" }, "emphasized text"),
+        h("em", "emphasized text"),
       ])
     );
 
-    const paragraph = screen.getByTestId("paragraph").element();
-    const italic = screen.getByTestId("italic").element();
-    const emphasis = screen.getByTestId("emphasis").element();
+    const paragraph = screen.getByTestId("font");
 
-    expect(getComputedStyle(paragraph).fontStyle).toBe("normal");
-    expect(getComputedStyle(italic).fontStyle).toBe("italic");
-    expect(getComputedStyle(emphasis).fontStyle).toBe("italic");
+    await document.fonts.ready;
 
-    paragraph.style.setProperty("--graupl-italic-font-style", "normal");
+    await expect(paragraph).toMatchScreenshot();
 
-    expect(getComputedStyle(italic).fontStyle).toBe("normal");
-    expect(getComputedStyle(emphasis).fontStyle).toBe("normal");
+    paragraph
+      .element()
+      .style.setProperty("--graupl-italic-font-style", "normal");
+
+    await expect(paragraph).toMatchScreenshot();
   });
 
   it.each(sizes)("Should match size screenshot with %s:", async (size) => {

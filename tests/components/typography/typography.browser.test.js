@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { h } from "vue";
 import { render } from "vitest-browser-vue";
 import Component from "./typography.js";
 
@@ -34,6 +35,54 @@ const transforms = [
 ];
 
 describe("Typography Component", () => {
+  it("Should match the screenshot for b and strong:", async () => {
+    const screen = render(() =>
+      h(
+        "p",
+        {
+          "data-testid": "font",
+          style: {
+            width: "fit-content",
+            fontFamily: "Liberation Sans, sans-serif",
+          },
+        },
+        [
+          "Plain text with ",
+          h("b", "bold text"),
+          " and ",
+          h("strong", "strong text"),
+        ]
+      )
+    );
+
+    await document.fonts.ready;
+
+    await expect(screen.getByTestId("font")).toMatchScreenshot();
+  });
+
+  it("Should match the screenshots for i and em with the default and overridden styles:", async () => {
+    const screen = render(() =>
+      h("p", { "data-testid": "font", style: { width: "fit-content" } }, [
+        "Plain text with ",
+        h("i", "italic text"),
+        " and ",
+        h("em", "emphasized text"),
+      ])
+    );
+
+    const paragraph = screen.getByTestId("font");
+
+    await document.fonts.ready;
+
+    await expect(paragraph).toMatchScreenshot();
+
+    paragraph
+      .element()
+      .style.setProperty("--graupl-italic-font-style", "normal");
+
+    await expect(paragraph).toMatchScreenshot();
+  });
+
   it.each(sizes)("Should match size screenshot with %s:", async (size) => {
     const screen = render(Component, {
       props: {

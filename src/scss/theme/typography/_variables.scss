@@ -57,7 +57,7 @@
 // | --graupl-small-word-spacing       | var(--graupl-word-spacing)                                                                            |
 // | --graupl-small-margin             | 0 0 var(--graupl-spacer-2) 0                                                                          |
 // | --graupl-bold-font-size           | var(--graupl-font-size)                                                                               |
-// | --graupl-bold-font-weight         | var(--graupl-font-weight)                                                                             |
+// | --graupl-bold-font-weight         | var(--graupl-font-weight-bold)                                                                        |
 // | --graupl-bold-font-style          | var(--graupl-font-style)                                                                              |
 // | --graupl-bold-font-variant        | var(--graupl-font-variant)                                                                            |
 // | --graupl-bold-color               | var(--graupl-font-color)                                                                              |
@@ -391,7 +391,7 @@ $bold-font-size: var(--#{root-defaults.$prefix}bold-font-size, #{$font-size});
 // --graupl-bold-font-weight
 $bold-font-weight: var(
   --#{root-defaults.$prefix}bold-font-weight,
-  #{$font-weight}
+  #{$font-weight-bold}
 );
 
 // --graupl-bold-font-style

@@ -23,7 +23,10 @@ const sizes = [
 
 const headings = [`h1`, `h2`, `h3`, `h4`, `h5`, `h6`];
 
-const styles = [`font-normal`, `font-italic`];
+const styles = [
+  ["font-style-normal", "italic"],
+  ["font-style-italic", "normal"],
+];
 
 const weights = [`font-weight-light`, `font-weight-normal`, `font-weight-bold`];
 
@@ -116,20 +119,37 @@ describe("Typography Component", () => {
     }
   );
 
-  it.each(styles)("Should match styles screenshot with %s:", async (style) => {
-    const screen = render(Component, {
-      props: {
-        attributes: {
-          class: [`${style}`],
-          "data-testid": "font",
-        },
-      },
-    });
+  it.each(styles)(
+    "Should match styles screenshot with %s:",
+    async (utilityClass, inheritedFontStyle) => {
+      const screen = render(() =>
+        h(
+          "div",
+          {
+            style: {
+              fontFamily: "Liberation Sans, sans-serif",
+              fontStyle: inheritedFontStyle,
+            },
+          },
+          [
+            h(
+              "p",
+              {
+                class: utilityClass,
+                "data-testid": "font",
+                style: { width: "25rem" },
+              },
+              "Sphinx of black quartz, judge my vow"
+            ),
+          ]
+        )
+      );
 
-    await document.fonts.ready;
+      await document.fonts.ready;
 
-    await expect(screen.getByTestId("font")).toMatchScreenshot();
-  });
+      await expect(screen.getByTestId("font")).toMatchScreenshot();
+    }
+  );
 
   it.each(weights)(
     "Should match weight screenshot with %s:",

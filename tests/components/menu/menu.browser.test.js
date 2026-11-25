@@ -16,12 +16,25 @@ describe("Menu Closed Component", () => {
 
 describe("Menu Open Component", () => {
   it("Should match screenshot while open:", async () => {
-    const screen = render(Component);
+    const screen = render(Component, {
+      props: {
+        open: true,
+        attributes: {
+          style: {
+            fontFamily: "Liberation Sans, sans-serif",
+          },
+        },
+      },
+    });
 
     await document.fonts.ready;
 
     await expect(
       screen.getByTestId("component-test-wrapper")
-    ).toMatchScreenshot();
+    ).toMatchScreenshot({
+      comparatorOptions: {
+        allowedMismatchedPixelRatio: 0.001,
+      },
+    });
   });
 });

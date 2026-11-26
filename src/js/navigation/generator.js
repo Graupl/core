@@ -43,10 +43,16 @@ const generate = ({
       const containerElement = controllerElement ? navigationElement : null;
       new window[MenuConstructor]({
         menuElement,
+        // Accessible Menu 4 support.
         menuItemSelector: ".menu-item",
         menuLinkSelector: ".menu-link",
         submenuItemSelector: ".submenu-item",
         submenuToggleSelector: ".submenu-toggle",
+        // Accessible Menu 5 support.
+        menuItemsSelector: ".menu-item",
+        menuLinksSelector: ".menu-link",
+        submenuItemsSelector: ".submenu-item",
+        submenuTogglesSelector: ".submenu-toggle",
         controllerElement,
         containerElement,
         ...options,

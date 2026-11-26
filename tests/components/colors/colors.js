@@ -1,32 +1,23 @@
 import { h } from "vue";
-import BasicComponent from "../component/basic-component.js";
-import AdvancedComponent from "../component/advanced-component.js";
-import { setupClasses } from "../helpers.js";
+import "../../../dist/css/graupl.css";
 
 export default {
   props: {
-    variant: {
-      type: String,
-      default: "",
-    },
-    text: {
-      type: String,
-      default: "Click me",
-    },
     attributes: {
       type: Object,
       default: () => ({}),
     },
   },
   setup(props) {
-    const attributes = setupClasses(props.attributes, ["button"]);
-
     return () =>
-      h(AdvancedComponent, {
-        attributes: {
-          style: "padding: 5rem",
+      h("div", {
+        ...props.attributes,
+        style: {
+          ...props.attributes.style,
+          width: "192px",
+          height: "81px",
+          colorScheme: "light",
         },
-        children: [h(BasicComponent, { ...props, attributes })],
       });
   },
 };

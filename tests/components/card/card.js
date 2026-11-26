@@ -3,6 +3,7 @@ import { setupClasses } from "../helpers.js";
 import AdvancedComponent from "../component/advanced-component.js";
 import BasicComponent from "../component/basic-component.js";
 import WrapperComponent from "../component/wrapper-component.js";
+import placeholderImage from "../placeholder.svg";
 
 export default {
   props: {
@@ -18,7 +19,7 @@ export default {
           children: [
             h(BasicComponent, {
               tag: "img",
-              attributes: { alt: "Card Image" },
+              attributes: { src: placeholderImage, alt: "Placeholder image" },
             }),
           ],
         }),

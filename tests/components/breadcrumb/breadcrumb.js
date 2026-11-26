@@ -40,6 +40,7 @@ export default {
         children: [
           h(AdvancedComponent, {
             ...props,
+            tag: "ol",
             attributes,
           }),
         ],

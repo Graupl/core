@@ -108,7 +108,6 @@ class Tooltip extends CollapsibleComponent {
    * @param {string|string[]|null} [options.expandClass = show]              - The class(es) to apply when the tooltip is expanded.
    * @param {string|string[]|null} [options.collapseClass = hide]            - The class(es) to apply when the tooltip is collapsed.
    * @param {string|string[]|null} [options.transitionClass = transitioning] - The class(es) to apply when the tooltip is transitioning between states.
-   * @param {number}               [options.transitionDelay = 250]           - A flag to initialize the tooltip immediately upon creation.
    * @param {number}               [options.transitionDuration = 150]        - The duration of the transition between "expanded" and "collapsed" states (in milliseconds).
    * @param {number}               [options.expandDuration = -1]             - The duration of the transition from "collapsed" to "expanded" states (in milliseconds).
    * @param {number}               [options.collapseDuration = -1]           - The duration of the transition from "expanded" to "collapsed" states (in milliseconds).
@@ -136,7 +135,6 @@ class Tooltip extends CollapsibleComponent {
     expandClass = "show",
     collapseClass = "hide",
     transitionClass = "transitioning",
-    transitionDelay = 250,
     transitionDuration = 150,
     expandDuration = -1,
     collapseDuration = -1,
@@ -206,7 +204,6 @@ class Tooltip extends CollapsibleComponent {
       expandClass,
       collapseClass,
       transitionClass,
-      transitionDelay,
       transitionDuration,
       expandDuration,
       collapseDuration,

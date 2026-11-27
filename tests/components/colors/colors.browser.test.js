@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./colors.js";
 import { variants } from "../defaults.js";
 
@@ -29,6 +30,8 @@ describe("Colors Component", () => {
             },
           });
 
+          await commands.movePointerAway();
+
           await expect(screen.getByTestId("color")).toMatchScreenshot(
             swatchOptions
           );
@@ -43,6 +46,8 @@ describe("Colors Component", () => {
             },
           },
         });
+
+        await commands.movePointerAway();
 
         await expect(screen.getByTestId("color")).toMatchScreenshot(
           swatchOptions

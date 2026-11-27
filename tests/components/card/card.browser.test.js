@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./card.js";
 
 describe("Card Component", () => {
@@ -14,6 +15,8 @@ describe("Card Component", () => {
     await document.fonts.ready;
 
     await image.element().decode();
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")

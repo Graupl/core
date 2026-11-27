@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./input-groups.js";
 
 // input-group's layout modifiers - not shared with any other component, so
@@ -34,6 +35,8 @@ describe("Input Group Component", () => {
 
       await document.fonts.ready;
 
+      await commands.movePointerAway();
+
       await expect(screen.getByTestId("input-group-frame")).toMatchScreenshot(
         screenshotOptions
       );
@@ -51,6 +54,8 @@ describe("Input Group Component", () => {
 
       await document.fonts.ready;
 
+      await commands.movePointerAway();
+
       await expect(screen.getByTestId("input-group-frame")).toMatchScreenshot(
         screenshotOptions
       );
@@ -66,6 +71,8 @@ describe("Input Group Component", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(screen.getByTestId("input-group-frame")).toMatchScreenshot(
         screenshotOptions

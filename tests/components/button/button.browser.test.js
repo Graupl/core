@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import { variants as themeVariants, states } from "../defaults.js";
 import Component from "./button.js";
 
@@ -19,6 +20,8 @@ describe("Button Component", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(
         screen.getByRole("button", { name: "OK" })
@@ -41,6 +44,10 @@ describe("Button Component", () => {
 
         await document.fonts.ready;
 
+        if (state !== "hover") {
+          await commands.movePointerAway();
+        }
+
         await expect(
           screen.getByTestId("component-test-wrapper")
         ).toMatchScreenshot();
@@ -57,6 +64,8 @@ describe("Button Component", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(
         screen.getByTestId("component-test-wrapper")

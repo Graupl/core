@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import { variants } from "../defaults.js";
 import Component from "./disclosure.js";
 
@@ -21,6 +22,8 @@ describe("Disclosure Closed Component", () => {
 
       await document.fonts.ready;
 
+      await commands.movePointerAway();
+
       await expect(
         screen.getByTestId("component-test-wrapper")
       ).toMatchScreenshot(screenshotOptions);
@@ -39,6 +42,8 @@ describe("Disclosure Open Component", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(
         screen.getByTestId("component-test-wrapper")

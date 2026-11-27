@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./carousel.js";
 
 describe("Carousel Component", () => {
@@ -7,6 +8,8 @@ describe("Carousel Component", () => {
     const screen = render(Component);
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")
@@ -22,6 +25,8 @@ describe("Carousel Component", () => {
 
     await document.fonts.ready;
 
+    await commands.movePointerAway();
+
     await expect(
       screen.getByRole("button", { name: "Play" })
     ).toMatchScreenshot();
@@ -35,6 +40,8 @@ describe("Carousel Component", () => {
     });
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByRole("button", { name: "Previous" })

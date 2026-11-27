@@ -62,8 +62,12 @@ import CarouselItem from "./CarouselItem.js";
  * @property {number}                                    _currentItem                        - The index of the currently active carousel item.
  * @property {boolean}                                   _autoplay                           - A flag to indicate if autoplay is enabled.
  * @property {boolean}                                   _automatic                          - A flag to determine if focusing an indicator activates its slide.
- * @property {boolean}                                   _hoverPaused                        - A flag to pause autoplay while the pointer is over the carousel.
- * @property {boolean}                                   _focusPaused                        - A flag to pause autoplay after focus until it is explicitly restarted.
+ * @property {boolean}                                   _pauseOnFocus                        - Pause rotation when focus moves into the carousel.
+ * @property {boolean}                                   _resumeOnBlur                        - Resume rotation when focus leaves the carousel after a focus pause.
+ * @property {boolean}                                   _pauseOnEnter                        - Pause rotation when the pointer enters the carousel.
+ * @property {boolean}                                   _resumeOnLeave                       - Resume rotation when the pointer leaves the carousel after a pointer pause.
+ * @property {boolean}                                   _hoverPaused                        - Whether a pointer interaction has paused autoplay.
+ * @property {boolean}                                   _focusPaused                        - Whether a focus interaction has paused autoplay.
  * @property {string}                                    _playText                           - The label for the autoplay button when the carousel is paused.
  * @property {string}                                    _pauseText                          - The label for the autoplay button when the carousel is playing.
  * @property {string}                                    _storageKey                         - The key used for storage.
@@ -93,6 +97,10 @@ class Carousel extends Component {
   _currentTabIndex = -1;
   _autoplay = true;
   _automatic = true;
+  _pauseOnFocus = true;
+  _resumeOnBlur = false;
+  _pauseOnEnter = true;
+  _resumeOnLeave = true;
   _hoverPaused = false;
   _focusPaused = false;
   _playText = "Play";
@@ -130,7 +138,11 @@ class Carousel extends Component {
    * @param {?(string|string[])} [options.playClass = play]                                               - The class(es) to apply to the autoplay button when the carousel is paused.
    * @param {?(string|string[])} [options.pauseClass = pause]                                             - The class(es) to apply to the autoplay button when the carousel is playing.
    * @param {boolean}            [options.autoplay = true]                                                - A flag to indicate if the carousel should autoplay.
-   * @param {boolean}            [options.automaticActivation = true]                                    - A flag to determine if focusing an indicator activates its slide.
+   * @param {boolean}            [options.pauseOnFocus = true]                                            - Pause rotation when focus moves into the carousel.
+   * @param {boolean}            [options.resumeOnBlur = false]                                           - Resume rotation when focus leaves the carousel after a focus pause.
+   * @param {boolean}            [options.pauseOnEnter = true]                                            - Pause rotation when the pointer enters the carousel.
+   * @param {boolean}            [options.resumeOnLeave = true]                                           - Resume rotation when the pointer leaves the carousel after a pointer pause.
+   * @param {boolean}            [options.automaticActivation = true]                                     - A flag to determine if focusing an indicator activates its slide.
    * @param {number}             [options.transitionDelay = 10000]                                        - A flag to initialize the carousel immediately upon creation.
    * @param {?string}            [options.playText = Play]                                                - The text to use for the play button.
    * @param {?string}            [options.pauseText = Pause]                                              - The text to use for the pause button.
@@ -156,6 +168,10 @@ class Carousel extends Component {
     playClass = "play",
     pauseClass = "pause",
     autoplay = true,
+    pauseOnFocus = true,
+    resumeOnBlur = false,
+    pauseOnEnter = true,
+    resumeOnLeave = true,
     automaticActivation = true,
     transitionDelay = 10000,
     playText = "Play",
@@ -208,6 +224,10 @@ class Carousel extends Component {
 
     // Set flags.
     this._autoplay = autoplay;
+    this._pauseOnFocus = pauseOnFocus;
+    this._resumeOnBlur = resumeOnBlur;
+    this._pauseOnEnter = pauseOnEnter;
+    this._resumeOnLeave = resumeOnLeave;
     this._automatic = automaticActivation;
     this._itemsPerPage = itemsPerPage;
     this._loop = loop;
@@ -261,6 +281,10 @@ class Carousel extends Component {
       // Boolean checks.
       const booleans = {
         autoplay: this._autoplay,
+        pauseOnFocus: this._pauseOnFocus,
+        resumeOnBlur: this._resumeOnBlur,
+        pauseOnEnter: this._pauseOnEnter,
+        resumeOnLeave: this._resumeOnLeave,
         automaticActivation: this._automatic,
         loop: this._loop,
       };
@@ -550,6 +574,21 @@ class Carousel extends Component {
   }
 
   /**
+   * Whether rotation needs an explicit restart.
+   *
+   * @protected
+   *
+   * @type {boolean}
+   */
+  get _isAutoplayStopped() {
+    return (
+      !this.autoplay ||
+      (this._focusPaused && !this._resumeOnBlur) ||
+      (this._hoverPaused && !this._resumeOnLeave)
+    );
+  }
+
+  /**
    * Sets all DOM elements within the carousel.
    *
    * Utilizes _setDOMElementType.
@@ -735,10 +774,10 @@ class Carousel extends Component {
   _handleAutoplay() {
     if (!this.isBootstrapped) return;
 
-    const isStopped = !this.autoplay || this._focusPaused;
-    const shouldPlay = !isStopped && !this._hoverPaused;
+    const isStopped = this._isAutoplayStopped;
+    const shouldPlay = !isStopped && !this._focusPaused && !this._hoverPaused;
 
-    // Focus stops require an explicit restart; hover pauses do not change the button.
+    // Keep Pause available while rotation is set to resume automatically.
     if (!isStopped) {
       addClass(this.pauseClass, this.dom.autoplay);
       removeClass(this.playClass, this.dom.autoplay);
@@ -852,15 +891,30 @@ class Carousel extends Component {
   /**
    * Handles the focus events throughout the carousel for proper use.
    *
-   * - Adds a `focusin` listener to the carousel element to pause autoplay.
+   * - Adds a `focusin` listener to pause autoplay when configured.
+   * - Adds a `focusout` listener to resume autoplay when configured.
    */
   _handleFocus() {
-    // Pause autoplay when anything in the carousel is focused.
-    // Keep it stopped until the user explicitly restarts rotation.
-    this._addEventListener("focusin", this.dom.carousel, () => {
-      this._focusPaused = true;
-      this._handleAutoplay();
-    });
+    if (this._pauseOnFocus) {
+      this._addEventListener("focusin", this.dom.carousel, () => {
+        this._focusPaused = true;
+        this._handleAutoplay();
+      });
+
+      if (this._resumeOnBlur) {
+        this._addEventListener("focusout", this.dom.carousel, (event) => {
+          if (
+            !this._focusPaused ||
+            this.dom.carousel.contains(event.relatedTarget)
+          ) {
+            return;
+          }
+
+          this._focusPaused = false;
+          this._handleAutoplay();
+        });
+      }
+    }
 
     const tabList = this.dom.carouselTabContainer;
     if (!tabList) {
@@ -978,11 +1032,13 @@ class Carousel extends Component {
   /**
    * Handles the hover events throughout the carousel for proper use.
    *
-   * - Adds a `pointerover` listener to the carousel to pause autoplay.
-   * - Adds a `pointerleave` listener to the carousel to resume autoplay.
+   * - Adds a `pointerover` listener to pause autoplay when configured.
+   * - Adds a `pointerleave` listener to resume autoplay when configured.
    */
   _handleHover() {
-    // Pause autoplay when anything in the carousel is hovered.
+    if (!this._pauseOnEnter) return;
+
+    // Pause when the pointer enters the carousel, including through a child element.
     this._addEventListener("pointerover", this.dom.carousel, (event) => {
       if (
         event.relatedTarget &&
@@ -994,10 +1050,14 @@ class Carousel extends Component {
       this._handleAutoplay();
     });
 
-    this._addEventListener("pointerleave", this.dom.carousel, () => {
-      this._hoverPaused = false;
-      this._handleAutoplay();
-    });
+    if (this._resumeOnLeave) {
+      this._addEventListener("pointerleave", this.dom.carousel, () => {
+        if (!this._hoverPaused) return;
+
+        this._hoverPaused = false;
+        this._handleAutoplay();
+      });
+    }
   }
 
   /**
@@ -1497,7 +1557,7 @@ class Carousel extends Component {
    * Toggles autoplay on the carousel.
    */
   toggleAutoplay() {
-    this.autoplay = !this.autoplay || this._focusPaused;
+    this.autoplay = this._isAutoplayStopped;
   }
 
   /**

@@ -424,6 +424,7 @@
     padding: $accordion-item-toggle-padding;
     transform: $accordion-item-toggle-transform;
     transition: $accordion-item-toggle-transition;
+    text-align: start;
 
     @include state.generate-modifiers(
       (

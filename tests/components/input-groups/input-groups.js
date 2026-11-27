@@ -2,7 +2,6 @@ import { h } from "vue";
 import { setupClasses } from "../helpers.js";
 import AdvancedComponent from "../component/advanced-component.js";
 import BasicComponent from "../component/basic-component.js";
-import WrapperComponent from "../component/wrapper-component.js";
 
 export default {
   props: {
@@ -79,14 +78,19 @@ export default {
     }
 
     return () =>
-      h(WrapperComponent, {
-        children: [
+      h(
+        "div",
+        {
+          "data-testid": "input-group-frame",
+          style: { width: "26rem", minHeight: "8rem", padding: "1rem" },
+        },
+        [
           h(AdvancedComponent, {
             ...props,
             attributes,
             children,
           }),
-        ],
-      });
+        ]
+      );
   },
 };

@@ -14,16 +14,25 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    wrapperAttributes: {
+      type: Object,
+      default: undefined,
+    },
   },
   setup(props) {
     const attributes = setupClasses(props.attributes, ["table"]);
 
+    const Wrapper = props.wrapperAttributes
+      ? AdvancedComponent
+      : WrapperComponent;
+
     return () =>
-      h(WrapperComponent, {
+      h(Wrapper, {
+        attributes: props.wrapperAttributes,
         children: [
           h(AdvancedComponent, {
             tag: "table",
-            ...props,
+            variant: props.variant,
             attributes,
             children: [
               h(BasicComponent, {

@@ -5,6 +5,13 @@ import { variants } from "../defaults.js";
 
 const shades = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
+const swatchOptions = {
+  comparatorOptions: {
+    threshold: 0,
+    allowedMismatchedPixelRatio: 0,
+  },
+};
+
 describe("Colors Component", () => {
   describe.for(variants)("%s color", async (variant) => {
     if (variant != "default") {
@@ -15,29 +22,31 @@ describe("Colors Component", () => {
               attributes: {
                 class: [`bg-${variant}-${shade}`],
                 "data-testid": "color",
+                // Make a missing utility visible against any page background.
+                // This matters for primary-100, which matches the page background.
+                style: { backgroundColor: "magenta" },
               },
             },
           });
 
-          await document.fonts.ready;
-
-          await expect(screen.getByTestId("color")).toMatchScreenshot();
+          await expect(screen.getByTestId("color")).toMatchScreenshot(
+            swatchOptions
+          );
         });
       });
     } else {
       it("Should match screenshot", async () => {
         const screen = render(Component, {
           props: {
-            variant,
             attributes: {
               "data-testid": "color",
             },
           },
         });
 
-        await document.fonts.ready;
-
-        await expect(screen.getByTestId("color")).toMatchScreenshot();
+        await expect(screen.getByTestId("color")).toMatchScreenshot(
+          swatchOptions
+        );
       });
     }
   });

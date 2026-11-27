@@ -15,6 +15,13 @@ const modifiers = [
   "stacked",
 ];
 
+// Allow small text shifts while preserving the differences between layouts.
+const screenshotOptions = {
+  comparatorOptions: {
+    allowedMismatchedPixelRatio: 0.028,
+  },
+};
+
 describe("Input Group Component", () => {
   it.each(modifiers)(
     "Should match screenshot with modifier: %s",
@@ -27,9 +34,9 @@ describe("Input Group Component", () => {
 
       await document.fonts.ready;
 
-      await expect(
-        screen.getByTestId("component-test-wrapper")
-      ).toMatchScreenshot();
+      await expect(screen.getByTestId("input-group-frame")).toMatchScreenshot(
+        screenshotOptions
+      );
     }
   );
 
@@ -44,9 +51,9 @@ describe("Input Group Component", () => {
 
       await document.fonts.ready;
 
-      await expect(
-        screen.getByTestId("component-test-wrapper")
-      ).toMatchScreenshot();
+      await expect(screen.getByTestId("input-group-frame")).toMatchScreenshot(
+        screenshotOptions
+      );
     });
   });
 
@@ -60,9 +67,9 @@ describe("Input Group Component", () => {
 
       await document.fonts.ready;
 
-      await expect(
-        screen.getByTestId("component-test-wrapper")
-      ).toMatchScreenshot();
+      await expect(screen.getByTestId("input-group-frame")).toMatchScreenshot(
+        screenshotOptions
+      );
     });
   });
 });

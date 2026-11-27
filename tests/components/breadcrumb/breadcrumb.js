@@ -2,7 +2,6 @@ import { h } from "vue";
 import { setupClasses } from "../helpers.js";
 import AdvancedComponent from "../component/advanced-component.js";
 import BasicComponent from "../component/basic-component.js";
-import WrapperComponent from "../component/wrapper-component.js";
 
 export default {
   props: {
@@ -36,13 +35,19 @@ export default {
     const attributes = setupClasses(props.attributes, ["breadcrumb"]);
 
     return () =>
-      h(WrapperComponent, {
-        children: [
+      h(
+        "div",
+        {
+          "data-testid": "breadcrumb-frame",
+          style: { width: "14rem", minHeight: "4rem", padding: "1rem" },
+        },
+        [
           h(AdvancedComponent, {
             ...props,
+            tag: "ol",
             attributes,
           }),
-        ],
-      });
+        ]
+      );
   },
 };

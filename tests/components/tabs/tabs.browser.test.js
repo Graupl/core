@@ -8,8 +8,6 @@ describe("Tabs Component", () => {
 
     await document.fonts.ready;
 
-    await expect(
-      screen.getByTestId("component-test-wrapper")
-    ).toMatchScreenshot();
+    await expect(screen.getByTestId("tabs-frame")).toMatchScreenshot();
   });
 });

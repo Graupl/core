@@ -5,7 +5,6 @@ import { variants } from "../defaults.js";
 import Component from "./table.js";
 
 const classes = [
-  "responsive-table",
   "bordered",
   "collapsed",
   "hoverable",
@@ -15,6 +14,35 @@ const classes = [
 
 describe("Table Component", () => {
   describe.for(variants)("%s table", async (variant) => {
+    it("Should match screenshot with responsive-table:", async () => {
+      const screen = render(Component, {
+        props: {
+          attributes: {
+            class: [variant],
+            style: { minWidth: "30rem" },
+          },
+          wrapperAttributes: {
+            class: ["responsive-table"],
+            "data-testid": "table-scroll-area",
+            style: {
+              width: "16rem",
+              fontFamily: "Liberation Sans, sans-serif",
+            },
+          },
+        },
+      });
+      const scrollArea = screen.getByTestId("table-scroll-area");
+      const element = scrollArea.element();
+
+      await document.fonts.ready;
+
+      element.scrollLeft = element.scrollWidth - element.clientWidth;
+
+      await expect(scrollArea).toMatchScreenshot();
+      expect(element.scrollWidth).toBeGreaterThan(element.clientWidth);
+      expect(element.scrollLeft).toBeGreaterThan(0);
+    });
+
     it.each(classes)(
       "Should match screenshot with %s:",
       async (modifierClass) => {

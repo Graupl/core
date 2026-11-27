@@ -2,7 +2,6 @@ import { h } from "vue";
 import { setupClasses } from "../helpers.js";
 import AdvancedComponent from "../component/advanced-component.js";
 import BasicComponent from "../component/basic-component.js";
-import WrapperComponent from "../component/wrapper-component.js";
 
 export default {
   props: {
@@ -77,13 +76,18 @@ export default {
     const attributes = setupClasses(props.attributes, ["tabs"]);
 
     return () =>
-      h(WrapperComponent, {
-        children: [
+      h(
+        "div",
+        {
+          "data-testid": "tabs-frame",
+          style: { width: "36rem", minHeight: "10rem", padding: "1rem" },
+        },
+        [
           h(AdvancedComponent, {
             ...props,
             attributes,
           }),
-        ],
-      });
+        ]
+      );
   },
 };

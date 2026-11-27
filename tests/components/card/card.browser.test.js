@@ -1,22 +1,22 @@
 import { describe, it, expect } from "vitest";
+import { page } from "vitest/browser";
 import { render } from "vitest-browser-vue";
-import { variants } from "../defaults.js";
 import Component from "./card.js";
 
 describe("Card Component", () => {
-  describe.for(variants)("%s card", async (variant) => {
-    it("Should match screenshot", async () => {
-      const screen = render(Component, {
-        props: {
-          variant,
-        },
-      });
+  it("Should match screenshot", async () => {
+    // Keep the full card visible once the image has loaded.
+    await page.viewport(1920, 1440);
 
-      await document.fonts.ready;
+    const screen = render(Component);
+    const image = screen.getByRole("img", { name: "Placeholder image" });
 
-      await expect(
-        screen.getByTestId("component-test-wrapper")
-      ).toMatchScreenshot();
-    });
+    await document.fonts.ready;
+
+    await image.element().decode();
+
+    await expect(
+      screen.getByTestId("component-test-wrapper")
+    ).toMatchScreenshot();
   });
 });

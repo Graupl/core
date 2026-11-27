@@ -24,7 +24,11 @@ export default {
 
     return () =>
       h(WrapperComponent, {
-        children: [h(BasicComponent, { ...props, tag: "span" })],
+        children: [
+          h("div", { style: { width: "12rem" } }, [
+            h(BasicComponent, { ...props, tag: "span" }),
+          ]),
+        ],
       });
   },
 };

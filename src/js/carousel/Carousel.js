@@ -728,6 +728,7 @@ class Carousel extends Component {
    * - Sets the appropriate aria-label for the autoplay button.
    * - Sets the appropriate aria-live for the carousel.
    * - Sets/clears the interval for autoplaying the carousel.
+   * - Stops autoplay when it reaches the last item with looping disabled.
    *
    * @protected
    */
@@ -754,7 +755,16 @@ class Carousel extends Component {
 
     if (shouldPlay) {
       this._setInterval(
-        () => this.activateNextItem(),
+        () => {
+          this.activateNextItem();
+
+          if (
+            !this.loop &&
+            this.currentItem === this.dom.carouselItems.length - 1
+          ) {
+            this.autoplay = false;
+          }
+        },
         this.transitionDelay,
         "autoplay"
       );
@@ -1442,6 +1452,8 @@ class Carousel extends Component {
   /**
    * Activates the next carousel item.
    *
+   * Does nothing on the last item when looping is disabled.
+   *
    * @param {object}          [options = {}]                                         - Additional options for activating the next item.
    * @param {boolean}         [options.scroll = true]                                - A flag to indicate if the carousel should scroll to the activated item.
    * @param {object}          [options.scrollOptions = {}]                           - Scroll option overrides.
@@ -1452,23 +1464,17 @@ class Carousel extends Component {
     scrollOptions = {},
     emit = this.isInitialized && this.shouldEmit,
   } = {}) {
-    if (this.loop) {
-      this.activateItem(this.currentItem + 1, { scroll, scrollOptions, emit });
-    } else {
-      if (this.currentItem + 1 >= this.dom.carouselItems.length) {
-        this.activateFirstItem({ scroll, scrollOptions, emit });
-      } else {
-        this.activateItem(this.currentItem + 1, {
-          scroll,
-          scrollOptions,
-          emit,
-        });
-      }
-    }
+    const nextItem = this.currentItem + 1;
+
+    if (!this.loop && nextItem >= this.dom.carouselItems.length) return;
+
+    this.activateItem(nextItem, { scroll, scrollOptions, emit });
   }
 
   /**
    * Activates the previous carousel item.
+   *
+   * Does nothing on the first item when looping is disabled.
    *
    * @param {object}          [options = {}]                                         - Additional options for activating the previous item.
    * @param {boolean}         [options.scroll = true]                                - A flag to indicate if the carousel should scroll to the activated item.
@@ -1480,22 +1486,11 @@ class Carousel extends Component {
     scrollOptions = {},
     emit = this.isInitialized && this.shouldEmit,
   } = {}) {
-    if (this.loop) {
-      this.activateItem(this.currentItem - 1, { scroll, scrollOptions, emit });
-    } else {
-      if (
-        this.currentItem - 1 < 0 ||
-        (this.loop && this.currentItem - 1 < this.itemsPerPage)
-      ) {
-        this.activateLastItem({ scroll, scrollOptions, emit });
-      } else {
-        this.activateItem(this.currentItem - 1, {
-          scroll,
-          scrollOptions,
-          emit,
-        });
-      }
-    }
+    const previousItem = this.currentItem - 1;
+
+    if (!this.loop && previousItem < 0) return;
+
+    this.activateItem(previousItem, { scroll, scrollOptions, emit });
   }
 
   /**

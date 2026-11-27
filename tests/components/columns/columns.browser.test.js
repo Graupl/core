@@ -95,4 +95,57 @@ describe("Columns Layout", () => {
       ).toMatchScreenshot();
     }
   );
+
+  it("Stacks columns without overflow in a narrow container", async () => {
+    const screen = render(Component, {
+      props: { count: 12, span: 2, items: 3 },
+    });
+    const container = screen.getByTestId("columns-wrapper").element();
+    container.style.inlineSize = "480px";
+
+    const grid = container.querySelector(".columns");
+    const items = Array.from(grid.children);
+    const rowPositions = new Set(items.map((item) => item.offsetTop));
+
+    expect(rowPositions.size).toBe(3);
+    expect(items[0].getBoundingClientRect().width).toBeCloseTo(
+      grid.getBoundingClientRect().width
+    );
+    expect(grid.scrollWidth).toBe(grid.clientWidth);
+
+    await expect(screen.getByTestId("columns-wrapper")).toMatchScreenshot();
+  });
+
+  it("Uses the minimum width inherited from a parent in a fixed grid", async () => {
+    const screen = render(Component, {
+      props: { count: 3, fixed: true, items: 1 },
+    });
+    const container = screen.getByTestId("columns-wrapper").element();
+    container.style.setProperty("--graupl-content-max-width", "1200px");
+    container.style.setProperty("--graupl-columns-min-width", "500px");
+
+    const item = container.querySelector(".columns").firstElementChild;
+
+    expect(item.getBoundingClientRect().width).toBe(500);
+
+    await expect(screen.getByTestId("columns-wrapper")).toMatchScreenshot();
+  });
 });
+
+it.each([false, true])(
+  "Fits all 11 columns at the content max width with fixed=%s",
+  async (fixed) => {
+    const screen = render(Component, { props: { count: 11, fixed } });
+    const wrapper = screen.getByTestId("component-test-wrapper").element();
+    wrapper.style.setProperty("--graupl-content-max-width", "1200px");
+
+    const items = Array.from(wrapper.querySelector(".columns").children);
+    const firstRow = items.filter(
+      (item) => item.offsetTop === items[0].offsetTop
+    );
+
+    expect(firstRow).toHaveLength(11);
+
+    await expect(screen.getByTestId("columns-wrapper")).toMatchScreenshot();
+  }
+);

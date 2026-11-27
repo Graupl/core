@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
-import { userEvent } from "vitest/browser";
+import { commands, userEvent } from "vitest/browser";
 import { variants } from "../defaults.js";
 import Component, { TableWithRowHeaders } from "./table.js";
 
@@ -38,6 +38,8 @@ describe("Table Component", () => {
 
       element.scrollLeft = element.scrollWidth - element.clientWidth;
 
+      await commands.movePointerAway();
+
       await expect(scrollArea).toMatchScreenshot();
       expect(element.scrollWidth).toBeGreaterThan(element.clientWidth);
       expect(element.scrollLeft).toBeGreaterThan(0);
@@ -56,10 +58,14 @@ describe("Table Component", () => {
 
         await document.fonts.ready;
 
-        const user = userEvent.setup();
-        const cell = screen.getByText("JavaScript frameworks");
+        if (modifierClass === "hoverable") {
+          const user = userEvent.setup();
+          const cell = screen.getByText("JavaScript frameworks");
 
-        await user.hover(cell);
+          await user.hover(cell);
+        } else {
+          await commands.movePointerAway();
+        }
 
         await expect(
           screen.getByTestId("component-test-wrapper")
@@ -114,6 +120,8 @@ describe("Table header colours", () => {
     });
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(header).toMatchScreenshot();
   });

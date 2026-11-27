@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { h } from "vue";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import BasicComponent from "../component/basic-component.js";
 import Component from "./flex-columns.js";
 
@@ -9,6 +10,8 @@ describe("Flex Columns Layout", () => {
     const screen = render(Component);
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")
@@ -37,6 +40,8 @@ describe("Flex Columns Layout", () => {
     });
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")

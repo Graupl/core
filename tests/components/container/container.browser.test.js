@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./container.js";
 
 // container's sidebars options aren't shared with any other component, so
@@ -17,6 +18,8 @@ describe("Container Layout", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(
         screen.getByTestId("component-test-wrapper")

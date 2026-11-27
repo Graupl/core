@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
-import { userEvent } from "vitest/browser";
+import { commands, userEvent } from "vitest/browser";
 import Component from "./form.js";
 
 describe("Form Component", () => {
@@ -8,6 +8,8 @@ describe("Form Component", () => {
     const screen = render(Component);
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")
@@ -33,6 +35,8 @@ describe("Form Component", () => {
     await user.selectOptions(selecter2, ["Value Default", "Option 2"]);
     await user.click(checkedOption);
     await user.click(checkedOption2);
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./tooltip.js";
 
 // Allow small text shifts while still detecting whether the tooltip is shown.
@@ -15,6 +16,8 @@ describe("Tooltip Component", () => {
 
     await document.fonts.ready;
 
+    await commands.movePointerAway();
+
     await expect(
       screen.getByTestId("component-test-wrapper")
     ).toMatchScreenshot(screenshotOptions);
@@ -28,6 +31,8 @@ describe("Tooltip Component", () => {
     });
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")

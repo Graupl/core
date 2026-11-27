@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./columns.js";
 
 const counts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -20,6 +21,8 @@ describe("Columns Layout", () => {
 
     await document.fonts.ready;
 
+    await commands.movePointerAway();
+
     await expect(
       screen.getByTestId("component-test-wrapper")
     ).toMatchScreenshot();
@@ -36,6 +39,8 @@ describe("Columns Layout", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(
         screen.getByTestId("component-test-wrapper")
@@ -59,6 +64,8 @@ describe("Columns Layout", () => {
 
     await document.fonts.ready;
 
+    await commands.movePointerAway();
+
     await expect(
       screen.getByTestId("component-test-wrapper")
     ).toMatchScreenshot();
@@ -73,6 +80,8 @@ describe("Columns Layout", () => {
     });
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(
       screen.getByTestId("component-test-wrapper")
@@ -89,6 +98,8 @@ describe("Columns Layout", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(
         screen.getByTestId("component-test-wrapper")
@@ -113,6 +124,8 @@ describe("Columns Layout", () => {
     );
     expect(grid.scrollWidth).toBe(grid.clientWidth);
 
+    await commands.movePointerAway();
+
     await expect(screen.getByTestId("columns-wrapper")).toMatchScreenshot();
   });
 
@@ -127,6 +140,8 @@ describe("Columns Layout", () => {
     const item = container.querySelector(".columns").firstElementChild;
 
     expect(item.getBoundingClientRect().width).toBe(500);
+
+    await commands.movePointerAway();
 
     await expect(screen.getByTestId("columns-wrapper")).toMatchScreenshot();
   });
@@ -145,6 +160,8 @@ it.each([false, true])(
     );
 
     expect(firstRow).toHaveLength(11);
+
+    await commands.movePointerAway();
 
     await expect(screen.getByTestId("columns-wrapper")).toMatchScreenshot();
   }

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./accordion.js";
 
 // Allow a small shift in a label while still detecting a swapped panel state.
@@ -16,7 +17,7 @@ describe("Accordion Closed Component", () => {
     const frame = screen.getByTestId("accordion-frame");
 
     await document.fonts.ready;
-    await frame.unhover();
+    await commands.movePointerAway();
 
     await expect(frame).toMatchScreenshot(screenshotOptions);
   });
@@ -33,7 +34,7 @@ describe("Accordion Open Component", () => {
     const frame = screen.getByTestId("accordion-frame");
 
     await document.fonts.ready;
-    await frame.unhover();
+    await commands.movePointerAway();
 
     await expect(frame).toMatchScreenshot(screenshotOptions);
   });

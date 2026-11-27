@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { h } from "vue";
 import { render } from "vitest-browser-vue";
+import { commands } from "vitest/browser";
 import Component from "./typography.js";
 
 const sizes = [
@@ -60,6 +61,8 @@ describe("Typography Component", () => {
 
     await document.fonts.ready;
 
+    await commands.movePointerAway();
+
     await expect(screen.getByTestId("font")).toMatchScreenshot();
   });
 
@@ -77,11 +80,15 @@ describe("Typography Component", () => {
 
     await document.fonts.ready;
 
+    await commands.movePointerAway();
+
     await expect(paragraph).toMatchScreenshot();
 
     paragraph
       .element()
       .style.setProperty("--graupl-italic-font-style", "normal");
+
+    await commands.movePointerAway();
 
     await expect(paragraph).toMatchScreenshot();
   });
@@ -97,6 +104,8 @@ describe("Typography Component", () => {
     });
 
     await document.fonts.ready;
+
+    await commands.movePointerAway();
 
     await expect(screen.getByTestId("font")).toMatchScreenshot();
   });
@@ -114,6 +123,8 @@ describe("Typography Component", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(screen.getByTestId("font")).toMatchScreenshot();
     }
@@ -147,6 +158,8 @@ describe("Typography Component", () => {
 
       await document.fonts.ready;
 
+      await commands.movePointerAway();
+
       await expect(screen.getByTestId("font")).toMatchScreenshot();
     }
   );
@@ -165,6 +178,8 @@ describe("Typography Component", () => {
 
       await document.fonts.ready;
 
+      await commands.movePointerAway();
+
       await expect(screen.getByTestId("font")).toMatchScreenshot();
     }
   );
@@ -182,6 +197,8 @@ describe("Typography Component", () => {
       });
 
       await document.fonts.ready;
+
+      await commands.movePointerAway();
 
       await expect(screen.getByTestId("font")).toMatchScreenshot();
     }

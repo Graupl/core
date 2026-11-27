@@ -44,6 +44,10 @@ export default defineConfig({
                 deviceScaleFactor: 1,
               },
             }),
+            commands: {
+              // Move the pointer without scrolling a locator into view.
+              movePointerAway: ({ page }) => page.mouse.move(0, 0),
+            },
             expect: {
               toMatchScreenshot: {
                 comparatorOptions: {

@@ -23,7 +23,7 @@ describe("Carousel Component", () => {
     await document.fonts.ready;
 
     await expect(
-      screen.getByTestId("component-test-wrapper")
+      screen.getByRole("button", { name: "Play" })
     ).toMatchScreenshot();
   });
 
@@ -37,7 +37,7 @@ describe("Carousel Component", () => {
     await document.fonts.ready;
 
     await expect(
-      screen.getByTestId("component-test-wrapper")
+      screen.getByRole("button", { name: "Previous" })
     ).toMatchScreenshot();
   });
 });

@@ -37,5 +37,7 @@ describe("Form Component", () => {
     await expect(
       screen.getByTestId("component-test-wrapper")
     ).toMatchScreenshot();
+
+    await expect(checkedOption2).toMatchScreenshot("selected-radio");
   });
 });

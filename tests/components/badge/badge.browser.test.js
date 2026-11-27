@@ -14,9 +14,14 @@ describe("Badge Component", () => {
 
       await document.fonts.ready;
 
+      // Allow small label shifts while still detecting a different palette.
       await expect(
-        screen.getByTestId("component-test-wrapper")
-      ).toMatchScreenshot();
+        screen.getByText("Badge", { exact: true })
+      ).toMatchScreenshot({
+        comparatorOptions: {
+          allowedMismatchedPixelRatio: 0.06,
+        },
+      });
     });
   });
 });

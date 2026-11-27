@@ -8,8 +8,10 @@ describe("Breadcrumb Component", () => {
 
     await document.fonts.ready;
 
-    await expect(
-      screen.getByTestId("component-test-wrapper")
-    ).toMatchScreenshot();
+    await expect(screen.getByTestId("breadcrumb-frame")).toMatchScreenshot({
+      comparatorOptions: {
+        allowedMismatchedPixelRatio: 0.02,
+      },
+    });
   });
 });

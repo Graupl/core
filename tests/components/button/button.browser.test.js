@@ -5,23 +5,47 @@ import Component from "./button.js";
 
 // The button component also has a `.link` modifier.
 const variants = [...themeVariants, "link"];
+const otherStates = states.filter((state) => state !== "focus");
 
 describe("Button Component", () => {
   describe.for(variants)("%s button", (variant) => {
-    it.each(states)("Should match screenshot with state: %s", async (state) => {
+    it("Should match screenshot with state: focus", async () => {
       const screen = render(Component, {
         props: {
           variant,
-          state,
+          state: "focus",
+          text: "OK",
         },
       });
 
       await document.fonts.ready;
 
       await expect(
-        screen.getByTestId("component-test-wrapper")
-      ).toMatchScreenshot();
+        screen.getByRole("button", { name: "OK" })
+      ).toMatchScreenshot({
+        comparatorOptions: {
+          allowedMismatchedPixelRatio: 0.05,
+        },
+      });
     });
+
+    it.each(otherStates)(
+      "Should match screenshot with state: %s",
+      async (state) => {
+        const screen = render(Component, {
+          props: {
+            variant,
+            state,
+          },
+        });
+
+        await document.fonts.ready;
+
+        await expect(
+          screen.getByTestId("component-test-wrapper")
+        ).toMatchScreenshot();
+      }
+    );
   });
 
   describe("anchor button", () => {

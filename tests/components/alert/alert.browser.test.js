@@ -19,4 +19,16 @@ describe("Alert Component", () => {
       ).toMatchScreenshot();
     });
   });
+
+  it("Should match screenshot of the dismiss button", async () => {
+    const screen = render(Component);
+
+    await document.fonts.ready;
+
+    await expect(screen.getByRole("button", { name: "X" })).toMatchScreenshot({
+      comparatorOptions: {
+        allowedMismatchedPixels: 6,
+      },
+    });
+  });
 });

@@ -13,11 +13,12 @@ describe("Accordion Closed Component", () => {
   it("Should match screenshot", async () => {
     const screen = render(Component);
 
-    await document.fonts.ready;
+    const frame = screen.getByTestId("accordion-frame");
 
-    await expect(screen.getByTestId("accordion-frame")).toMatchScreenshot(
-      screenshotOptions
-    );
+    await document.fonts.ready;
+    await frame.unhover();
+
+    await expect(frame).toMatchScreenshot(screenshotOptions);
   });
 });
 
@@ -29,10 +30,11 @@ describe("Accordion Open Component", () => {
       },
     });
 
-    await document.fonts.ready;
+    const frame = screen.getByTestId("accordion-frame");
 
-    await expect(screen.getByTestId("accordion-frame")).toMatchScreenshot(
-      screenshotOptions
-    );
+    await document.fonts.ready;
+    await frame.unhover();
+
+    await expect(frame).toMatchScreenshot(screenshotOptions);
   });
 });

@@ -175,3 +175,33 @@ export default {
       });
   },
 };
+
+export const TableWithRowHeaders = {
+  props: {
+    attributes: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  setup(props) {
+    return () =>
+      h("table", props.attributes, [
+        h("caption", "Winter supplies"),
+        h("thead", [
+          h("tr", [
+            h("th", { scope: "col" }, "Supply"),
+            h("th", { scope: "col" }, [
+              "Stock ",
+              h("strong", "available"),
+              " ",
+              h("em", "today"),
+            ]),
+          ]),
+        ]),
+        h("tbody", [
+          h("tr", [h("th", { scope: "row" }, "Gloves"), h("td", "12")]),
+          h("tr", [h("th", { scope: "row" }, "Boots"), h("td", "8")]),
+        ]),
+      ]);
+  },
+};

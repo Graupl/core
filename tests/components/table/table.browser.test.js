@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render } from "vitest-browser-vue";
 import { userEvent } from "vitest/browser";
 import { variants } from "../defaults.js";
-import Component from "./table.js";
+import Component, { TableWithRowHeaders } from "./table.js";
 
 const classes = [
   "bordered",
@@ -66,5 +66,55 @@ describe("Table Component", () => {
         ).toMatchScreenshot();
       }
     );
+  });
+});
+
+describe("Table header colours", () => {
+  // https://github.com/Graupl/graupl/issues/377
+  it("keeps row header colours on striped and hovered rows", async () => {
+    const screen = render(TableWithRowHeaders, {
+      props: {
+        attributes: {
+          class: ["striped-rows", "hoverable"],
+          style: {
+            "--graupl-table-header-background": "#24365b",
+            "--graupl-table-header-color": "#ffffff",
+            "--graupl-table-striped-background": "#dae9ff",
+            "--graupl-table-striped-color": "#16253d",
+            "--graupl-table-hover-background": "#ffe4b5",
+            "--graupl-table-hover-color": "#402800",
+          },
+        },
+      },
+    });
+    const table = screen.getByRole("table");
+    const hoveredHeader = screen.getByRole("rowheader", { name: "Boots" });
+
+    await document.fonts.ready;
+    await userEvent.hover(hoveredHeader);
+
+    await expect(table).toMatchScreenshot();
+  });
+
+  // https://github.com/Graupl/graupl/issues/430
+  it("uses the header text colour for bold and italic text", async () => {
+    const screen = render(TableWithRowHeaders, {
+      props: {
+        attributes: {
+          style: {
+            "--graupl-font-color": "#ffd089",
+            "--graupl-table-header-background": "#24365b",
+            "--graupl-table-header-color": "#ffffff",
+          },
+        },
+      },
+    });
+    const header = screen.getByRole("columnheader", {
+      name: "Stock available today",
+    });
+
+    await document.fonts.ready;
+
+    await expect(header).toMatchScreenshot();
   });
 });

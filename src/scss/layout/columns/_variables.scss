@@ -51,19 +51,24 @@ $columns-content-max-width: var(
 // We take the maximum width of the page and subtract the gap width multiplied by the number of
 // columns minus one (to account for the gaps between columns).
 // We then divide this by the number of columns to get the min-width of each column.
+// Round down so an exact-fit grid can fit every column after browser rounding.
 /* stylelint-disable scss/operator-no-newline-after -- Prettier wants to format it this way. */
 // --graupl-columns-min-width
 $columns-min-width: var(
   --#{root-defaults.$prefix}columns-min-width,
-  calc(
-    (
-        #{$columns-content-max-width} - #{$columns-column-gap} *
-          (#{$columns-count} - 1)
-      ) /
-      #{$columns-count}
+  round(
+    down,
+    calc(
+      (
+          #{$columns-content-max-width} - #{$columns-column-gap} *
+            (#{$columns-count} - 1)
+        ) /
+        #{$columns-count}
+    ),
+    0.1px
   )
 );
-/* stylelint-enable  scss/operator-no-newline-after */
+/* stylelint-enable scss/operator-no-newline-after */
 // --graupl-columns-max-width
 $columns-max-width: var(
   --#{root-defaults.$prefix}columns-max-width,

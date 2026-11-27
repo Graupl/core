@@ -8,7 +8,7 @@ Follow [Accessible Ecosystem Core's project instructions](https://github.com/Acc
 
 Keep JavaScript source in `src/js/`. Keep Sass source in `src/scss/` and public entry points in `scss/`. Preserve the package exports and compiled file paths that consumers use. Run the checks in the contribution guidelines and verify the packed package when changing its build or exports.
 
-Use browser tests for visual regression. Use Playwright and `toMatchScreenshot()` to compare rendered output against screenshot baselines. Generate baselines on Linux to match CI.
+Every browser test must be a visual regression test. Use Playwright and include a `toMatchScreenshot()` assertion in each browser test to compare rendered output against a screenshot baseline. Generate baselines on Linux to match CI.
 
 ## Documentation and examples
 
